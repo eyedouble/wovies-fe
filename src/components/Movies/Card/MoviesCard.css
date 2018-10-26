@@ -1,0 +1,9 @@
+.movies__card {
+    max-width: 345px;     
+    margin: 15px;
+}
+
+.movies__card .__media {       
+    object-fit: cover;
+    height: 200px;      
+}

@@ -1,0 +1,10 @@
+
+.app-menu-bar > .__toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.app-menu-bar > .__toolbar > .__left {
+    display: flex;
+    align-items: center;
+}
