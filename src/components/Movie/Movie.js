@@ -1,55 +1,87 @@
 import React, { Component } from 'react';
+import HttpClient from './../../clients/HttpClient';
+import Watchlater from './../../modules/watchlater/WatchLater';
 import AppMenuBar from '../../partials/AppMenuBar/AppMenuBar';
-
+import AppSpinner from '../../partials/AppSpinner/AppSpinner';
+import MovieArtwork from './Artwork/MovieArtwork';
+import MovieDetails from './Details/MovieDetails';
 import './Movie.css';
-
-import Button from '@material-ui/core/Button';
-
 
 
 class Movie extends Component {
 
-    State = {};
-    
+    state = {
+        movie: null
+        ,id: null
+    };
 
     constructor ( Props ) {
-        super();
-
+        super ( );
         if ( typeof Props.match.params.id !== 'undefined' )
-            this.State.id = Props.match.params.id;
-
-
-        console.log ( this.State.id );
+            this.state.id = Props.match.params.id;
     }
 
-  render() {
-    return (
-      <div className="movie">
+    componentDidMount = ( ) => {
+        this._fetchMovie ( this.state.id ).then( ( Response ) => {           
+            this.setState ( {movie: Response.data} );            
+            
+        } );
+    }
 
-      <AppMenuBar Title="Movie"></AppMenuBar>
-        <header className="App-header">
+    handleClick = ( Event ) => {
+        if ( Event.action === 'add_to_watchlater' )
+            return Watchlater.add ( Event.detail ).then ( ( R ) => {
+                window.dispatchEvent ( new CustomEvent ( 'AppSnackbar', {detail:{message:'Movie added to your watch later list.', action:'ok'}} ) );
+            } ); 
+    }
 
-        <h1>Movie zxz</h1>
+    render = ( ) => {
+        let Content;
 
-        
+        if ( this.state.movie === null ) {
+            Content = 
+            <>
+                <AppMenuBar title="Movie"></AppMenuBar>
+                <AppSpinner></AppSpinner>
+            </>;
+        } else {
+            Content =
+                <>
+                    <AppMenuBar 
+                        title={ this.state.movie.title } 
+                        back={ true }></AppMenuBar>
+                    <main>
+                        <MovieArtwork 
+                            className='__artwork'   
+                            title={ this.state.movie.title }                  
+                            src={ 'https://image.tmdb.org/t/p/original' + this.state.movie.poster_path }></MovieArtwork>    
+                            
+                        <MovieDetails 
+                            className="__details"
+                            id={ this.state.movie.id }
+                            subtitle={ this.state.movie.tagline }
+                            copy={ this.state.movie.overview}
+                            vote_average={ this.state.movie.vote_average}
+                            runtime={ this.state.movie.runtime}
+                            genres={ this.state.movie.genres}
+                            clickCallback={ this.handleClick }
+                            ></MovieDetails>
+                    </main>            
+                </>;
+        }
 
-   
-          {/* <img src={logo} className="App-logo" alt="logo" /> */}
-          {/* <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p> */}
-          {/* <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn Reactc
-          </a> */}
-        </header>
-      </div>
-    );
-  }
+        return (
+            <div className="movie">
+                    {Content}
+            </div>
+        );
+    }
+
+    _fetchMovie = ( Id ) => {
+        const httpClient = new HttpClient ( );
+        return httpClient.get ( 'movie/' + Id );
+    }
+
 }
 
 export default Movie;

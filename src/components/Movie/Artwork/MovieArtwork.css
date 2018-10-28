@@ -1,0 +1,47 @@
+.movie-artwork {
+    position: relative;
+    flex: 1 0 auto;
+    display: flex;    
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
+    height: 50vh;
+    color:#fff;
+    background-size: cover;  
+    background-position: 0 25%;   
+    box-shadow: inset #000 0 0 70px -6px
+}
+
+@media screen and (min-width: 964px) {
+    .movie-artwork {
+        width: 50vw;
+        height: calc(100vh - 64px);
+        background-position: 0 50%;
+    }
+}
+
+.movie-artwork::after {
+    content:'';
+    position: absolute;
+    display: block;
+    right: -20%;
+    top: -20%;
+    left: -20%;
+    height: 40%;
+    background: #000;
+    opacity: 0.8;
+    filter: blur(40px);
+    z-index: 0;
+}
+
+.movie-artwork .__title {
+    font-size: 4em;
+    z-index: 1;
+    position: relative;
+    padding: 1vh 5vw;
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.9) 0px 0px 10px
+
+    
+}

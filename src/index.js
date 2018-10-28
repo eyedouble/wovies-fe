@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import { BrowserRouter as Router } from 'react-router-dom';
-import * as serviceWorker from './serviceWorker';
-
-import Routes from './router/Routes';
-
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { cyan, deepPurple } from '@material-ui/core/colors';
+import * as serviceWorker from './serviceWorker';
+
+import Routes from './modules/router/Routes';
+
+import AppSnackbar from './partials/AppSnackbar/AppSnackbar';
+import './index.css';
+
 
 const theme = createMuiTheme ( {
     palette: {
@@ -27,6 +29,7 @@ ReactDOM.render(
                 {Routes()}                 
             </div>
         </Router>
+        <AppSnackbar></AppSnackbar>       
     </MuiThemeProvider>
     ,
     document.getElementById('root')

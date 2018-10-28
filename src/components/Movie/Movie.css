@@ -1,3 +1,19 @@
 .movie {
     margin: 64px 0 0 0;
 }
+
+.movie main {
+    position: relative;
+    display: flex;    
+    flex-direction: column;
+    flex-wrap: wrap; 
+    color: #fff;
+       
+}
+
+@media screen and (min-width: 964px) {
+    .movie main {
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+}

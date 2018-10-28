@@ -13,6 +13,12 @@ code {
     monospace;
 }
 
-:root{
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+:root {
   background: #212121;
 }
+

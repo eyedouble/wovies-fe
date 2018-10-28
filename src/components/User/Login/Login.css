@@ -1,0 +1,17 @@
+.login {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.login .__form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 230px;
+
+}

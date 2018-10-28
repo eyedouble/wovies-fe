@@ -1,137 +1,104 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom'
-
-import './AppMenuBar.css';
-
-import AppMenu from './AppMenu/AppMenu';
-
-
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import ArrowBackOutlinedIcon from '@material-ui/icons/ArrowBackOutlined';
+import MovieOutlinedIcon from '@material-ui/icons/MovieOutlined';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-
-
-
-
+import { Button } from '@material-ui/core';
+import Auth from './../../modules/auth/Auth';
+import AppUserMenu from './AppUserMenu/AppUserMenu';
+import './AppMenuBar.css';
 
 
 class AppMenuBar extends React.Component {
-  state = {
-    auth: true,
-    menuTarget: null,
-  };
+	
+	state = {
+		auth: Auth.isAuthenticated ( )
+		,appMenuTarget: null
+		,appUserMenuTarget: null
+	}
+	
+	handleAppUserMenu = ( Event ) => {
+		this.setState ( {appUserMenuTarget: Event.currentTarget} );
+	}
 
-  handleMenu = E => {
-    this.setState ( {menuTarget: E.currentTarget} );
-  };
+	handlePrimaryButton = ( _Event ) => {
+		if ( this.props.back )
+			this.props.history.goBack ( );
+	}
 
-  handleChange = event => {
-    this.setState({ auth: event.target.checked });
-  };
+	handleAppUserMenuClose = ( Event ) => {    
+		if ( typeof Event.navigate !== 'undefined' )
+			this.props.history.push ( Event.navigate );
 
-  // handleMenu = event => {
-  //   console.log ( event );
-  //   this.setState({ anchorEl: event.currentTarget });
-  // };
+		this.setState({ appUserMenuTarget: null });
+	};
 
-  handleMenuClose = ( E ) => {
-    console.log ( E );
-    console.log ( this.props );
-    if ( typeof E.navigate !== 'undefined' )
-      this.props.history.push ( E.navigate );
+	render = ( ) => {    
+		const {auth, appMenuTarget, appUserMenuTarget} = this.state;  
+		const appUserMenuOpen = Boolean(appUserMenuTarget);
 
-    this.setState({ menuTarget: null });
-  };
+		return (
+			<div>      
+				<AppBar className="app-menu-bar" position="fixed">
+					<Toolbar className="__toolbar">
 
-  render() {
-    // const { classes } = this.props;
-    const { auth, menuTarget } = this.state;
-    const open = Boolean(menuTarget);
+					 <div className="__left">
+							<IconButton
+								aria-owns={ appMenuTarget ? 'menu-appbar' : null }
+								aria-haspopup="true"                
+								onClick={ this.handlePrimaryButton }
+								color="inherit">
+								{ this.props.back && <ArrowBackOutlinedIcon /> }
+								{ !this.props.back && <MovieOutlinedIcon /> }
+							</IconButton>
 
-    return (
-      <div>
-        {/* <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch checked={auth} onChange={this.handleChange} aria-label="LoginSwitch" />
-            }
-            label={auth ? 'Logout' : 'Login'}
-          />
-        </FormGroup> */}
-        <AppBar className="app-menu-bar" position="fixed">
-          <Toolbar className="__toolbar">
-           <div className="__left">
-            <IconButton color="inherit" aria-label="Menu">
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" color="inherit">
-                {this.props.Title}
-              </Typography>
-           </div>
-        
-            <div className="__right">
-              <IconButton
-                aria-owns={open ? 'menu-appbar' : null}
-                aria-haspopup="true"
-                onClick={this.handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+							<Typography variant="h6" color="inherit">
+								{ this.props.title }
+							</Typography>
+						
+					 </div>
+				
+						<div className="__right">
+							{ auth && (
+								<>
+								<IconButton
+								aria-owns={appUserMenuTarget ? 'menu-appbar' : null}
+								aria-haspopup="true"
+								onClick={ this.handleAppUserMenu }
+								color="inherit">
+								<AccountCircle />
+							</IconButton>
 
-              <AppMenu 
-                target={this.state.menuTarget}
-                open={open}
-                onClose={this.handleMenuClose}></AppMenu>
-              
-            </div>
-            
-            {/* {auth && (
-              <div>
-                <IconButton
-                  aria-owns={open ? 'menu-appbar' : null}
-                  aria-haspopup="true"
-                  onClick={this.handleMenu}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={this.handleClose}
-                >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                </Menu>
-              </div>
-            )} */}
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-  }
+							<AppUserMenu 
+								target={ this.state.appUserMenuTarget }
+								open={ appUserMenuOpen }
+								onClose={ this.handleAppUserMenuClose }></AppUserMenu>
+								</>
+							) }
+							{ !auth && (
+								<Link to="/user/login">
+									<Button variant="outlined">
+										Sign in
+									</Button>
+								</Link>                
+							) }              
+						</div>            
+						
+					</Toolbar>
+				</AppBar>
+			</div>
+		);
+	}
 }
 
-// AppMenuBar.propTypes = {
-//   classes: PropTypes.object.isRequired,
-// };
+AppMenuBar.propTypes = {
+	title: PropTypes.string,
+};
 
-// export default withStyles()(AppMenuBar);
 export default withRouter ( AppMenuBar );
