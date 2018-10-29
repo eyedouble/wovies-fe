@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-
 import TextField from '@material-ui/core/TextField';
-
 import HttpClient from './../../clients/HttpClient';
 import Watchlater from './../../modules/watchlater/WatchLater';
 import AppMenuBar from './../../partials/AppMenuBar/AppMenuBar';
@@ -16,47 +14,49 @@ class Movies extends Component {
         movies: null        
         ,search: ''
         ,searching:false
-        ,httpClient: new HttpClient()
+        ,httpClient: new HttpClient ( )
     };
 
     componentDidMount = ( ) => {
-        this._fetchMovies().then((R) => {                        
-            this.setState({ movies: R.data });           
-        });        
+        this._fetchMovies ( ).then ( ( Response ) => {                        
+            this.setState ( {movies: Response.data} );           
+        } );        
     }
 
-    handleClick = ( E ) => {      
-        if ( E.action === 'open' )
-            return this.props.history.push ( '/movie/' + E.detail );
-        if ( E.action === 'add_to_watchlater' )
-            return Watchlater.add ( E.detail ).then ( ( R ) => {
+    handleClick = ( Event ) => {      
+        if ( Event.action === 'open' )
+            return this.props.history.push ( '/movie/' + Event.detail );
+        if ( Event.action === 'add_to_watchlater' )
+            return Watchlater.add ( Event.detail ).then ( ( _Response ) => {
                 window.dispatchEvent ( new CustomEvent ( 'AppSnackbar', {detail:{message:'Movie added to your watch later list.', action:'ok'}} ) );
             } ); 
     }
 
-    handleSearch = ( E ) => {
-        if ( E.target.value.length < 1 )
-            return this._fetchMovies().then((R) => { 
-                this.setState ( {search:'', searching:false, movies: R.data} );         
-            });
+    handleSearch = ( Event ) => {
+        Event.preventDefault ( );
+
+        if ( Event.target.value.length < 1 )
+            return this._fetchMovies ( ).then ( ( Response ) => { 
+                this.setState ( {search:'', searching:false, movies: Response.data} );         
+            } );
     
 
-        this.setState ( {search:E.target.value, searching:true} );       
-        this._searchMovies ( E.target.value ).then ( ( Response ) => {            
+        this.setState ( {search:Event.target.value, searching:true} );       
+        this._searchMovies ( Event.target.value ).then ( ( Response ) => {            
             if ( Response.ok )
                 this.setState ( {movies: Response.data } );
 
             return this.setState ( {searching:false} );
-        }, ( Error ) => {
+        }, ( _Error ) => {
 
             return this.setState ( {searching:false} );            
         } )
     }
 
-    render ( ) {
+    render = ( ) => {
         let Content;
 
-        if (this.state.movies === null || this.state.searching ) {
+        if ( this.state.movies === null || this.state.searching ) {
             Content = <AppSpinner></AppSpinner>;
         } else {
             Content =
@@ -89,23 +89,14 @@ class Movies extends Component {
                                     className="__input"
                                     margin="normal"
                                     variant="outlined" />
-                                {/* <Button variant="outlined" size="large" className="__button">
-                                    Search
-                                </Button> */}
                             </form>
                         </section>
-                    {Content}
+                    { Content }
                 </main>
                 
             </div>
         );
     }
-
-
-    /* Unmount -> Cancel outstanding http reqs
-    
-    */
-
 
     _fetchMovies = ( ) => {       
         return this.state.httpClient.get ( 'movie/popular' );

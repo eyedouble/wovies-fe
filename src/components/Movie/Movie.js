@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import HttpClient from './../../clients/HttpClient';
 import Watchlater from './../../modules/watchlater/WatchLater';
-import AppMenuBar from '../../partials/AppMenuBar/AppMenuBar';
-import AppSpinner from '../../partials/AppSpinner/AppSpinner';
+import AppMenuBar from './../../partials/AppMenuBar/AppMenuBar';
+import AppSpinner from './../../partials/AppSpinner/AppSpinner';
 import MovieArtwork from './Artwork/MovieArtwork';
 import MovieDetails from './Details/MovieDetails';
 import './Movie.css';
@@ -72,13 +72,14 @@ class Movie extends Component {
 
         return (
             <div className="movie">
-                    {Content}
+                    { Content }
             </div>
         );
     }
 
     _fetchMovie = ( Id ) => {
         const httpClient = new HttpClient ( );
+        
         return httpClient.get ( 'movie/' + Id );
     }
 

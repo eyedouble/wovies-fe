@@ -1,5 +1,5 @@
 .movie {
-    margin: 64px 0 0 0;
+    margin: 64px 0 0 0
 }
 
 .movie main {
@@ -7,13 +7,13 @@
     display: flex;    
     flex-direction: column;
     flex-wrap: wrap; 
-    color: #fff;
+    color: #fff
        
 }
 
 @media screen and (min-width: 964px) {
     .movie main {
         flex-direction: row;
-        flex-wrap: nowrap;
+        flex-wrap: nowrap
     }
 }

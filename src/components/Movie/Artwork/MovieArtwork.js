@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import './MovieArtwork.css';
 
 
 class MovieArtwork extends Component {
 
-    render() {
+    render = ( ) => {
+        
         return (
             <section 
                 className="movie-artwork" 
